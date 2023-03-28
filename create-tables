@@ -1,0 +1,56 @@
+\c zest_data;
+
+DROP TABLE IF EXISTS usage_data;
+CREATE TABLE usage_data (
+  ChargerID INTEGER,
+  SessionID INTEGER,
+  Date DATE,
+  Usage_kWh NUMERIC,
+  Revenue_£ NUMERIC
+);
+
+COPY usage_data
+FROM '/Users/gemmashaw/Coding-Projects/SQL-Zest/csv-files/usage-data-new-dates.csv' 
+DELIMITER ',' 
+CSV HEADER;
+
+DROP TABLE IF EXISTS charger_data;
+CREATE TABLE charger_data (
+  ChargerID INTEGER,
+  kWRating INTEGER,
+  CurrentType varchar(2),
+  LocationID varchar(10)
+);
+
+COPY charger_data
+FROM '/Users/gemmashaw/Coding-Projects/SQL-Zest/csv-files/charger-data.csv' 
+DELIMITER ',' 
+CSV HEADER;
+
+DROP TABLE IF EXISTS location_data;
+CREATE TABLE location_data (
+  LocationID varchar(10),
+  SiteName varchar(200),
+  City varchar(50),
+  Postcode varchar(10),
+  Partner varchar(1),
+  PartnerID varchar(5)
+);
+
+COPY location_data
+FROM '/Users/gemmashaw/Coding-Projects/SQL-Zest/csv-files/location-data.csv' 
+DELIMITER ',' 
+CSV HEADER;
+
+SELECT (ChargerID, kWRating, charger_data.LocationID, SiteName, Postcode)
+FROM charger_data
+INNER JOIN location_data
+ON charger_data.LocationID = location_data.LocationID;
+
+SELECT (Usage_data.ChargerID, SessionID, Date, Usage_kWh, Revenue_£,
+kWRating, charger_data.LocationID, SiteName, Postcode, location_data.partnerID)
+FROM Usage_data
+INNER JOIN charger_data  
+ON usage_data.ChargerID = charger_data.ChargerID
+INNER JOIN location_data
+ON charger_data.LocationID = location_data.LocationID;
