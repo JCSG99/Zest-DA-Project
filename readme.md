@@ -9,4 +9,4 @@ Instructions:
 ``` psql -f create-database```
 
 2. In the root of the directory run :
-``` psql -f create-tables```# Zest-DA-Project
+``` psql -f create-tables```
